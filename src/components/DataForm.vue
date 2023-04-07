@@ -54,7 +54,7 @@ const isValidB = computed(() => {
 
 watch([() => a.value, () => b.value, () => selected.value], ([av, bv, sv]) => {
   if (isValidA.value && isValidB.value) {
-    generateValues(a.value, b.value, N, sv);
+    generateValues(av, bv, N, sv);
   }
 });
 
@@ -64,13 +64,14 @@ onMounted(() => {
 
 const generateValues = (a, b, N, decimalPlaces) => {
   dataStore.getGeneratedValues.length = 0; // clears array
-  let xr1 = [], xi1 = [], xb1 = [], xi2 = [], xr2 = [];
+  let xr1 = [], xi1 = [], xb1 = [], xi2 = [], xr2 = [], fx = [];
   for (let i = 0; i < N; i++) {
     xr1.push(getRandomNumber(a, b, decimalPlaces));
     xi1.push(realToInt(xr1[i]));
     xb1.push(intToBin(xi1[i]));
     xi2.push(binToInt(xb1[i]));
     xr2.push(intToReal(xi2[i], decimalPlaces));
+    fx.push(calculatefx(xr1[i], decimalPlaces));
   }
   for (let i = 0; i < N; i++) {
     dataStore.getGeneratedValues.push({
@@ -78,7 +79,8 @@ const generateValues = (a, b, N, decimalPlaces) => {
       xi1: xi1[i],
       xb1: xb1[i],
       xi2: xi2[i],
-      xr2: xr2[i]
+      xr2: xr2[i],
+      fx: fx[i]
     });
   }
 };
@@ -91,6 +93,12 @@ const realToInt = (real) => Math.ceil((1/(b.value - a.value)) * (real - a.value)
 const intToBin = (xint) => xint.toString(2);
 const binToInt = (xbin) => parseInt(xbin, 2);
 const intToReal = (xint, decimalPlaces) => ((xint * (b.value - a.value))/(Math.pow(2, L.value) - 1) + a.value).toFixed(decimalPlaces);
+const calculatefx = (real, decimalPlaces) => {
+  const m = mantissa(real).toFixed(decimalPlaces);
+  return (m * (Math.cos(20 * Math.PI * real) - Math.sin(real))).toFixed(decimalPlaces);
+};
+
+const mantissa = (real) => (Math.abs(real) % 1);
 
 </script>
 

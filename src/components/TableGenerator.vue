@@ -8,7 +8,7 @@
         <th>x<sup>bin</sup></th>
         <th>x<sup>int</sup></th>
         <th>x<sup>real</sup></th>
-        <th>f(x)</th>
+        <th>f(x<sup>real</sup>)</th>
       </tr>
     </thead>
     <tbody>
@@ -24,7 +24,7 @@
         <td>{{ item.xb1 }}</td>
         <td>{{ item.xi2 }}</td>
         <td>{{ item.xr2 }}</td>
-        <td>?</td>
+        <td> {{ item.fx }} </td>
       </tr>
     </tbody>
   </table>
