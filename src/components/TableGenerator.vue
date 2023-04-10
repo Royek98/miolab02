@@ -24,7 +24,7 @@
         <td>{{ item.xb1 }}</td>
         <td>{{ item.xi2 }}</td>
         <td>{{ item.xr2 }}</td>
-        <td> {{ item.fx }} </td>
+        <td>{{ item.fx }}</td>
       </tr>
     </tbody>
   </table>

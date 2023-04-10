@@ -90,7 +90,17 @@ const getRandomNumber = (min, max, decimalPlaces) => {
 };
 
 const realToInt = (real) => Math.ceil((1/(b.value - a.value)) * (real - a.value) * (Math.pow(2, L.value) - 1));
-const intToBin = (xint) => xint.toString(2);
+const intToBin = (xint) => {
+  const bin = xint.toString(2);
+  let result = '';
+  if (bin.length < L.value) {
+    for (let i = (L.value-bin.length); i > 0; i--) {
+      result += '0';
+    }
+  }
+  result += bin;
+  return result;
+}
 const binToInt = (xbin) => parseInt(xbin, 2);
 const intToReal = (xint, decimalPlaces) => ((xint * (b.value - a.value))/(Math.pow(2, L.value) - 1) + a.value).toFixed(decimalPlaces);
 const calculatefx = (real, decimalPlaces) => {
