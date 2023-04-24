@@ -2,40 +2,14 @@
   <table>
     <thead>
       <tr>
-        <th>LP</th>
-        <th>x<sup>real</sup></th>
-        <th>x<sup>int</sup></th>
-        <th>x<sup>bin</sup></th>
-        <th>x<sup>int</sup></th>
-        <th>x<sup>real</sup></th>
-        <th>f(x<sup>real</sup>)</th>
+        <slot name="tableHeader"></slot>
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="(item, index) in dataStore.getGeneratedValues"
-        :key="item"
-        @mouseenter="(event) => event.originalTarget.classList.add('green')"
-        @mouseleave="(event) => event.originalTarget.classList.remove('green')"
-      >
-        <td>{{ index + 1 }}</td>
-        <td>{{ item.xr1 }}</td>
-        <td>{{ item.xi1 }}</td>
-        <td>{{ item.xb1 }}</td>
-        <td>{{ item.xi2 }}</td>
-        <td>{{ item.xr2 }}</td>
-        <td>{{ item.fx }}</td>
-      </tr>
+      <slot name="tableBody"></slot>
     </tbody>
   </table>
 </template>
-
-<script setup>
-import { useDataStore } from "@/stores/dataStore";
-
-const dataStore = useDataStore();
-
-</script>
 
 <style scoped>
 table {
@@ -47,8 +21,8 @@ table {
   background-color: #222;
 }
 
-th,
-td {
+:slotted(th),
+:slotted(td) {
   border: 1px solid #444;
   padding: 8px;
   text-align: center;
@@ -58,11 +32,12 @@ thead {
   background-color: #333;
 }
 
-th {
+:slotted(th) {
   font-weight: bold;
 }
 
-sup {
+:slotted(sup) {
   font-size: 0.7em;
+  font-weight: bold;
 }
 </style>
