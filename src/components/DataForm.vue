@@ -15,7 +15,12 @@
       :class="isValidB ? '' : 'error'"
     />
     <label for="N">N = </label>
-    <input name="N" type="number" v-model="N" disabled />
+    <input
+      name="N"
+      type="number"
+      v-model="N"
+      :class="isValidN ? '' : 'error'"
+    />
     <label for="decimalPlaces"> Decimal Places = </label>
     <select name="decimalPlaces" v-model="selected">
       <option
@@ -39,10 +44,16 @@ const dataStore = useDataStore();
 const a = ref(-4),
   b = ref(12),
   selected = ref(3),
-  N = 10,
+  N = ref(10),
   decimalPlaces = ref([0.01, 0.001, 0.0001]);
 
-const L = computed(() => Math.ceil(Math.log2((1/decimalPlaces.value[selected.value-2])*(b.value - a.value)+1)));
+const L = computed(() =>
+  Math.ceil(
+    Math.log2(
+      (1 / decimalPlaces.value[selected.value - 2]) * (b.value - a.value) + 1
+    )
+  )
+);
 
 const isValidA = computed(() => {
   // v-model.number converts to a number so if input has letters value of dataStore.a is <empty string>
@@ -52,19 +63,31 @@ const isValidB = computed(() => {
   return b.value !== "" && b.value > a.value;
 });
 
-watch([() => a.value, () => b.value, () => selected.value], ([av, bv, sv]) => {
-  if (isValidA.value && isValidB.value) {
-    generateValues(av, bv, N, sv);
-  }
+const isValidN = computed(() => {
+  return N.value !== "" && N.value > 0;
 });
 
+watch(
+  [() => a.value, () => b.value, () => selected.value, () => N.value],
+  ([av, bv, sv, nv]) => {
+    if (isValidA.value && isValidB.value && isValidN.value) {
+      generateValues(av, bv, nv, sv);
+    }
+  }
+);
+
 onMounted(() => {
-  generateValues(a.value, b.value, N, selected.value);
+  generateValues(a.value, b.value, N.value, selected.value);
 });
 
 const generateValues = (a, b, N, decimalPlaces) => {
   dataStore.getGeneratedValues.length = 0; // clears array
-  let xr1 = [], xi1 = [], xb1 = [], xi2 = [], xr2 = [], fx = [];
+  let xr1 = [],
+    xi1 = [],
+    xb1 = [],
+    xi2 = [],
+    xr2 = [],
+    fx = [];
   for (let i = 0; i < N; i++) {
     xr1.push(getRandomNumber(a, b, decimalPlaces));
     xi1.push(realToInt(xr1[i]));
@@ -80,7 +103,7 @@ const generateValues = (a, b, N, decimalPlaces) => {
       xb1: xb1[i],
       xi2: xi2[i],
       xr2: xr2[i],
-      fx: fx[i]
+      fx: fx[i],
     });
   }
 };
@@ -89,27 +112,34 @@ const getRandomNumber = (min, max, decimalPlaces) => {
   return (Math.random() * (max - min) + min).toFixed(decimalPlaces);
 };
 
-const realToInt = (real) => Math.ceil((1/(b.value - a.value)) * (real - a.value) * (Math.pow(2, L.value) - 1));
+const realToInt = (real) =>
+  Math.ceil(
+    (1 / (b.value - a.value)) * (real - a.value) * (Math.pow(2, L.value) - 1)
+  );
 const intToBin = (xint) => {
   const bin = xint.toString(2);
-  let result = '';
+  let result = "";
   if (bin.length < L.value) {
-    for (let i = (L.value-bin.length); i > 0; i--) {
-      result += '0';
+    for (let i = L.value - bin.length; i > 0; i--) {
+      result += "0";
     }
   }
   result += bin;
   return result;
-}
+};
 const binToInt = (xbin) => parseInt(xbin, 2);
-const intToReal = (xint, decimalPlaces) => ((xint * (b.value - a.value))/(Math.pow(2, L.value) - 1) + a.value).toFixed(decimalPlaces);
+const intToReal = (xint, decimalPlaces) =>
+  ((xint * (b.value - a.value)) / (Math.pow(2, L.value) - 1) + a.value).toFixed(
+    decimalPlaces
+  );
 const calculatefx = (real, decimalPlaces) => {
   const m = mantissa(real).toFixed(decimalPlaces);
-  return (m * (Math.cos(20 * Math.PI * real) - Math.sin(real))).toFixed(decimalPlaces);
+  return (m * (Math.cos(20 * Math.PI * real) - Math.sin(real))).toFixed(
+    decimalPlaces
+  );
 };
 
-const mantissa = (real) => (Math.abs(real) % 1);
-
+const mantissa = (real) => Math.abs(real) % 1;
 </script>
 
 <style scoped>
