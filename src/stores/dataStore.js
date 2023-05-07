@@ -8,7 +8,12 @@ export const useDataStore = defineStore("DataStore", () => {
     b = ref(12),
     selected = ref(3),
     N = ref(10),
-    decimalPlaces = ref([0.01, 0.001, 0.0001]);
+    decimalPlaces = ref([0.01, 0.001, 0.0001]),
+    pk = ref(0.75),
+    pm = ref(0.005);
 
-  return { getGeneratedValues, a, b, selected, decimalPlaces, N };
+  const getPs = ref([]); // populacja po selekcji
+  const canShowLab04Table = ref(false);
+
+  return { getGeneratedValues, a, b, selected, decimalPlaces, N, getPs, pk, pm, canShowLab04Table };
 });

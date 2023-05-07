@@ -31,6 +31,26 @@
         {{ item }}
       </option>
     </select>
+    <label for="pk">Pk = </label>
+    <input
+      name="pk"
+      type="number"
+      v-model="pk"
+      :class="isValidPk ? '' : 'error'"
+    />
+    <label for="pm">Pm = </label>
+    <input
+      name="pm"
+      type="number"
+      v-model="pm"
+      :class="isValidPm ? '' : 'error'"
+    />
+    <label for="t">T = </label>
+    <input
+      name="t"
+      type="number"
+      disabled
+    />
   </div>
 </template>
 
@@ -43,7 +63,9 @@ const dataStore = useDataStore();
 const a = ref(-4),
     b = ref(12),
     selected = ref(3),
-    N = ref(10);
+    N = ref(10),
+    pk = ref(0.75),
+    pm = ref(0.005);
 
 const isValidA = computed(() => {
   // v-model.number converts to a number so if input has letters value of dataStore.a is <empty string>
@@ -57,15 +79,26 @@ const isValidN = computed(() => {
   return N.value !== "" && N.value > 0;
 });
 
+const isValidPk = computed(() => {
+  return pk.value !== "" && pk.value >= 0.5 && pk.value <= 1;
+});
+
+const isValidPm = computed(() => {
+  return pm.value !== "" && pm.value > 0 && pm.value <= 0.01; // 0.01
+});
+
 watch(
-  [() => a.value, () => b.value, () => selected.value, () => N.value],
-  ([av, bv, sv, nv]) => {
-    if (isValidA.value && isValidB.value && isValidN.value) {
+  [() => a.value, () => b.value, () => selected.value, () => N.value, () => pk.value, () => pm.value],
+  ([av, bv, sv, nv, npk, npm]) => {
+    if (isValidA.value && isValidB.value && isValidN.value && isValidPk.value && isValidPm.value) {
       generateValues(av, bv, nv, sv);
       dataStore.a = av;
       dataStore.b = bv;
       dataStore.N = nv;
       dataStore.selected = sv;
+      dataStore.pk = npk;
+      dataStore.pm = npm;
+      dataStore.canShowLab04Table = false;
     }
   }
 );

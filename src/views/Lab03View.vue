@@ -48,6 +48,7 @@ const L = computed(() =>
 );
 
 const generatedValues = computed(() => {
+  dataStore.canShowLab04Table = true;
   const data = [],
     fxs = [],
     gxs = [],
@@ -82,6 +83,7 @@ const generatedValues = computed(() => {
     qxs.push(qx);
   }
 
+  dataStore.getPs.length = 0; // clears array
   for (let i = 0; i < dataStore.N; i++) {
     const r = randomNumberInRange2(0, 1);
     const ps = getRealFromRange(real, qxs, r);
@@ -96,6 +98,8 @@ const generatedValues = computed(() => {
       r: r,
       ps: ps,
     });
+
+    dataStore.getPs.push(ps);
   }
 
   return data;
@@ -131,4 +135,3 @@ const getRealFromRange = (real, qxs, r) => {
 const mantissa = (real) => Math.abs(real) % 1;
 </script>
 
-<style></style>

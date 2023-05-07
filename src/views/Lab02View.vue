@@ -74,7 +74,6 @@ const generatedValues = computed(() => {
     });
   }
     
-  console.log(list)
   return list;
 });
 
@@ -115,4 +114,3 @@ const calculatefx = (real, decimalPlaces) => {
 const mantissa = (real) => Math.abs(real) % 1;
 </script>
 
-<style></style>
