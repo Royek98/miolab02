@@ -12,7 +12,7 @@
     </template>
     <template #tableBody>
       <tr
-        v-for="(item, index) in generatedValues"
+        v-for="(item, index) in dataStoreLab03.generatedValues"
         :key="item"
         @mouseenter="(event) => event.originalTarget.classList.add('green')"
         @mouseleave="(event) => event.originalTarget.classList.remove('green')"
@@ -33,105 +33,117 @@
 <script setup>
 import TableGenerator from "@/components/TableGenerator.vue";
 import { useDataStore } from "@/stores/dataStore";
-import { computed } from "vue";
+import { useDataStoreLab03 } from "@/stores/dataStoreLab03";
+import { computed, onBeforeMount } from "vue";
+// import  router  from "../router/index"
+// import { useRouter } from 'vue-router';
 
 const dataStore = useDataStore();
+const dataStoreLab03 = useDataStoreLab03();
+// const router = useRouter();
 
-const L = computed(() =>
-  Math.ceil(
-    Math.log2(
-      (1 / dataStore.decimalPlaces[dataStore.selected - 2]) *
-        (dataStore.b - dataStore.a) +
-        1
-    )
-  )
-);
+// onBeforeMount(() => {
+//   console.log(router.options.history.state.back);
+//   if (router.options.history.state.back == "/Lab04") {
+//     router.push("/Lab04");
+//   }
+// });
 
-const generatedValues = computed(() => {
-  dataStore.canShowLab04Table = true;
-  const data = [],
-    fxs = [],
-    gxs = [],
-    pxs = [],
-    qxs = [];
-  const real = dataStore.getGeneratedValues;
-  const decimalPlaces = dataStore.selected;
+// const L = computed(() =>
+//   Math.ceil(
+//     Math.log2(
+//       (1 / dataStore.decimalPlaces[dataStore.selected - 2]) *
+//         (dataStore.b - dataStore.a) +
+//         1
+//     )
+//   )
+// );
 
-  var qx = 0.0;
-  var min = 10000;
-  var gxSum = 0;
-  for (let i = 0; i < dataStore.N; i++) {
-    const fx = calculatefx(real[i], decimalPlaces);
+// const generatedValues = computed(() => {
+//   dataStore.canShowLab04Table = true;
+//   const data = [],
+//     fxs = [],
+//     gxs = [],
+//     pxs = [],
+//     qxs = [];
+//   const real = dataStore.getGeneratedValues;
+//   const decimalPlaces = dataStore.selected;
 
-    if (fx < min) {
-      min = fx;
-    }
+//   var qx = 0.0;
+//   var min = 10000;
+//   var gxSum = 0;
+//   for (let i = 0; i < dataStore.N; i++) {
+//     const fx = calculatefx(real[i], decimalPlaces);
 
-    fxs.push(fx);
-  }
+//     if (fx < min) {
+//       min = fx;
+//     }
 
-  for (let i = 0; i < dataStore.N; i++) {
-    const gx = calculategx(fxs[i], min, decimalPlaces);
-    gxSum += gx;
-    gxs.push(gx);
-  }
+//     fxs.push(fx);
+//   }
 
-  for (let i = 0; i < dataStore.N; i++) {
-    const px = calculatepx(gxs[i], gxSum);
-    qx += px;
-    pxs.push(px);
-    qxs.push(qx);
-  }
+//   for (let i = 0; i < dataStore.N; i++) {
+//     const gx = calculategx(fxs[i], min, decimalPlaces);
+//     gxSum += gx;
+//     gxs.push(gx);
+//   }
 
-  dataStore.getPs.length = 0; // clears array
-  for (let i = 0; i < dataStore.N; i++) {
-    const r = randomNumberInRange2(0, 1);
-    const ps = getRealFromRange(real, qxs, r);
+//   for (let i = 0; i < dataStore.N; i++) {
+//     const px = calculatepx(gxs[i], gxSum);
+//     qx += px;
+//     pxs.push(px);
+//     qxs.push(qx);
+//   }
 
-    data.push({
-      id: i + 1,
-      real: real[i],
-      fx: fxs[i],
-      gx: gxs[i],
-      px: pxs[i],
-      qx: qxs[i],
-      r: r,
-      ps: ps,
-    });
+//   dataStore.getPs.length = 0; // clears array
+//   for (let i = 0; i < dataStore.N; i++) {
+//     const r = randomNumberInRange2(0, 1);
+//     const ps = getRealFromRange(real, qxs, r);
 
-    dataStore.getPs.push(ps);
-  }
+//     data.push({
+//       id: i + 1,
+//       real: real[i],
+//       fx: fxs[i],
+//       gx: gxs[i],
+//       px: pxs[i],
+//       qx: qxs[i],
+//       r: r,
+//       ps: ps,
+//     });
 
-  return data;
-});
+//     dataStore.getPs.push(ps);
+//   }
 
-const calculatefx = (real, decimalPlaces) => {
-  const m = mantissa(real).toFixed(decimalPlaces);
-  return m * (Math.cos(20 * Math.PI * real) - Math.sin(real));
-};
+//   return data;
+// });
 
-const calculategx = (fx, fmin, decimalPlaces) => {
-  return fx - fmin + Math.pow(10, -decimalPlaces);
-};
+// const calculatefx = (real, decimalPlaces) => {
+//   const m = mantissa(real).toFixed(decimalPlaces);
+//   return m * (Math.cos(20 * Math.PI * real) - Math.sin(real));
+// };
 
-const calculatepx = (gx, gxSum) => {
-  return gx / gxSum;
-};
+// const calculategx = (fx, fmin, decimalPlaces) => {
+//   return fx - fmin + Math.pow(10, -decimalPlaces);
+// };
 
-const randomNumberInRange2 = (min, max) => {
-  return Math.random() * (max - min) + min;
-};
+// const calculatepx = (gx, gxSum) => {
+//   return gx / gxSum;
+// };
 
-const getRealFromRange = (real, qxs, r) => {
-  for (let i = 0; i < qxs.length; i++) {
-    if (i == 0) {
-      if (r >= 0 && r < qxs[i]) return real[i];
-    } else {
-      if (r >= qxs[i - 1] && r < qxs[i]) return real[i];
-    }
-  }
-}
+// const randomNumberInRange2 = (min, max) => {
+//   return Math.random() * (max - min) + min;
+// };
 
-const mantissa = (real) => Math.abs(real) % 1;
+// const getRealFromRange = (real, qxs, r) => {
+//   for (let i = 0; i < qxs.length; i++) {
+//     if (i == 0) {
+//       if (r >= 0 && r < qxs[i]) return real[i];
+//     } else {
+//       if (r >= qxs[i - 1] && r < qxs[i]) return real[i];
+//     }
+//   }
+// }
+
+// const mantissa = (real) => Math.abs(real) % 1;
 </script>
 

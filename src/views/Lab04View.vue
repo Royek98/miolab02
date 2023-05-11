@@ -1,5 +1,5 @@
 <template>
-  <table-generator v-if="dataStore.canShowLab04Table">
+  <table-generator>
     <template #tableHeader>
       <th>LP</th>
       <th>Populacja po selekcji x<sup>real</sup></th>
@@ -34,15 +34,22 @@
       </tr>
     </template>
   </table-generator>
-  <p v-else>Najpierw uruchom lab03</p>
+  <!-- <p v-else>Nie udało się wygenerować populacji po selekcji</p> -->
 </template>
 
 <script setup>
 import TableGenerator from "@/components/TableGenerator.vue";
 import { useDataStore } from "@/stores/dataStore";
-import { computed } from "vue";
+import { useDataStoreLab03 } from "@/stores/dataStoreLab03";
+import { computed, onBeforeMount } from "vue";
 
 const dataStore = useDataStore();
+const dataStoreLab03 = useDataStoreLab03();
+
+onBeforeMount(() =>{
+  dataStoreLab03.generatedValues;
+});
+
 
 const L = computed(() =>
   Math.ceil(
@@ -54,9 +61,6 @@ const L = computed(() =>
   )
 );
 
-// const canShowLab04Table = computed(() => {
-//   return dataStore.getPs.length != 0;
-// });
 
 const generatedValues = computed(() => {
   const data = [];

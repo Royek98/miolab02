@@ -80,11 +80,11 @@ const isValidN = computed(() => {
 });
 
 const isValidPk = computed(() => {
-  return pk.value !== "" && pk.value >= 0.5 && pk.value <= 1;
+  return pk.value !== "" && pk.value >= 0 && pk.value <= 1;
 });
 
 const isValidPm = computed(() => {
-  return pm.value !== "" && pm.value > 0 && pm.value <= 0.01; // 0.01
+  return pm.value !== "" && pm.value >= 0 && pm.value <= 1; // 0.01
 });
 
 watch(

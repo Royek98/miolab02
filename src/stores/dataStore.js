@@ -13,7 +13,6 @@ export const useDataStore = defineStore("DataStore", () => {
     pm = ref(0.005);
 
   const getPs = ref([]); // populacja po selekcji
-  const canShowLab04Table = ref(false);
 
-  return { getGeneratedValues, a, b, selected, decimalPlaces, N, getPs, pk, pm, canShowLab04Table };
+  return { getGeneratedValues, a, b, selected, decimalPlaces, N, getPs, pk, pm };
 });
