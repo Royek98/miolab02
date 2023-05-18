@@ -34,7 +34,6 @@
       </tr>
     </template>
   </table-generator>
-  <!-- <p v-else>Nie udało się wygenerować populacji po selekcji</p> -->
 </template>
 
 <script setup>
@@ -224,7 +223,6 @@ const fillChildrenPopulationData = (arraySize, data) => {
   }
 };
 
-// let isFirstParentCalculateChildrenPopulation = true;
 const calculateChildrenPopulation = (pc, firstParent, secondParent) => {
   const [firstParentPart1, firstParentPart2] = [
     firstParent.slice(0, pc),
@@ -235,13 +233,6 @@ const calculateChildrenPopulation = (pc, firstParent, secondParent) => {
     secondParent.slice(pc),
   ];
 
-  //   if (isFirstParentCalculateChildrenPopulation) {
-  //     console.log(firstParentPart1 + " " + secondParentPart2);
-  //     isFirstParentCalculateChildrenPopulation = false;
-  //     return firstParentPart1 + "" + secondParentPart2;
-  //   }
-
-  //   isFirstParentCalculateChildrenPopulation = true;
   return secondParentPart1 + "" + firstParentPart2;
 };
 
@@ -268,7 +259,6 @@ const calculateMutationIndexes = (bin) => {
 };
 
 const mutation = (bin, indexes) => {
-  console.log(indexes);
 
   if (indexes == null) {
     return bin;

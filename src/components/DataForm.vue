@@ -98,7 +98,6 @@ watch(
       dataStore.selected = sv;
       dataStore.pk = npk;
       dataStore.pm = npm;
-      dataStore.canShowLab04Table = false;
     }
   }
 );
