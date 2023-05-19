@@ -5,6 +5,7 @@
     <RouterLink to="/Lab02">Lab02</RouterLink>
     <RouterLink to="/Lab03">Lab03</RouterLink>
     <RouterLink to="/Lab04">Lab04</RouterLink>
+    <RouterLink to="/Lab05">Lab05</RouterLink>
   </nav>
   <br/>
   <RouterView />

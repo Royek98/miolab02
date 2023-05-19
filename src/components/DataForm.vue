@@ -49,8 +49,14 @@
     <input
       name="t"
       type="number"
-      disabled
+      v-model="T"
     />
+    
+    Elite = <br/>
+    <label class="switch" for="checkbox">
+      <input type="checkbox" id="checkbox" v-model="eliteChecked"/>
+      <div class="slider round"></div>
+    </label>
   </div>
 </template>
 
@@ -63,9 +69,11 @@ const dataStore = useDataStore();
 const a = ref(-4),
     b = ref(12),
     selected = ref(3),
-    N = ref(10),
+    N = ref(80),
     pk = ref(0.75),
-    pm = ref(0.005);
+    pm = ref(0.005),
+    T = ref(80),
+    eliteChecked = ref(true);
 
 const isValidA = computed(() => {
   // v-model.number converts to a number so if input has letters value of dataStore.a is <empty string>
@@ -87,9 +95,13 @@ const isValidPm = computed(() => {
   return pm.value !== "" && pm.value >= 0 && pm.value <= 1; // 0.01
 });
 
+const isValidT = computed(() => {
+  return T.value !== "" && T.value;
+});
+
 watch(
-  [() => a.value, () => b.value, () => selected.value, () => N.value, () => pk.value, () => pm.value],
-  ([av, bv, sv, nv, npk, npm]) => {
+  [() => a.value, () => b.value, () => selected.value, () => N.value, () => pk.value, () => pm.value, () => T.value, () => eliteChecked.value],
+  ([av, bv, sv, nv, npk, npm, nT, nEliteChecked]) => {
     if (isValidA.value && isValidB.value && isValidN.value && isValidPk.value && isValidPm.value) {
       generateValues(av, bv, nv, sv);
       dataStore.a = av;
@@ -98,6 +110,8 @@ watch(
       dataStore.selected = sv;
       dataStore.pk = npk;
       dataStore.pm = npm;
+      dataStore.T = nT;
+      dataStore.eliteChecked = nEliteChecked;
     }
   }
 );
@@ -155,4 +169,71 @@ input[type="number"]:disabled {
 .error {
   background-color: rgb(82, 1, 1) !important;
 }
+
+.switch {
+  display: inline-block;
+  height: 34px;
+  position: relative;
+  width: 60px;
+}
+
+.switch input {
+  display:none;
+}
+
+.slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: .4s;
+}
+
+.slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: .4s;
+  width: 26px;
+}
+
+input:checked + .slider {
+  background-color: hsla(160, 100%, 37%, 1);
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* general styling */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #f1f2f3;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+
 </style>

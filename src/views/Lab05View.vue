@@ -1,0 +1,97 @@
+<template>
+    <table-generator>
+    <template #tableHeader>
+      <th>LP</th>
+      <th>x<sup>real</sup></th>
+      <th>x<sup>bin</sup></th>
+      <th>f(x)</th>
+      <th>%</th>
+    </template>
+    <template #tableBody>
+      <tr
+        v-for="(item, index) in dataStoreLab05.generatedValues"
+        :key="item"
+        @mouseenter="(event) => event.originalTarget.classList.add('green')"
+        @mouseleave="(event) => event.originalTarget.classList.remove('green')"
+      >
+        <td>{{ index + 1 }}</td>
+        <td>{{ item.xbin }}</td>
+        <td> {{ item.fx }} </td>
+        <td> {{ item.percentage }} </td>
+      </tr>
+    </template>
+  </table-generator>
+
+  <Line id="chart" :data="data" :options="options"></Line>
+
+</template>
+
+<script setup>
+import TableGenerator from "@/components/TableGenerator.vue";
+import { useDataStoreLab05 } from "@/stores/dataStoreLab05";
+import { Line } from 'vue-chartjs'
+import { computed } from 'vue';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+} from 'chart.js'
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+)
+
+const dataStoreLab05 = useDataStoreLab05();
+console.log(dataStoreLab05.generatedValues)
+// watch(dataStoreLab05.iterationTable, () => {
+
+// })
+
+
+const data = computed(() => { return {
+  labels: dataStoreLab05.iterationTable,
+  datasets: [
+    {
+      label: 'fx max',
+      backgroundColor: '#ff0000',
+      borderColor: "#ff0000",
+      data: dataStoreLab05.generatedValues.fxMaxIteration
+    }, 
+    {
+      label: 'fx min',
+      backgroundColor: '#00ff00',
+      borderColor: "#00ff00",
+      data: dataStoreLab05.generatedValues.fxMinIteration
+    }, 
+    {
+      label: 'fx avg',
+      backgroundColor: '#0000ff',
+      borderColor: "#0000ff",
+      data: dataStoreLab05.generatedValues.fxAvgIteration
+    }
+  ]
+}
+})
+
+const options = {
+  responsive: true,
+  lineTension: 0.4
+}
+
+</script>
+
+<style scoped>
+#chart {
+  background-color: white;
+}
+</style>
