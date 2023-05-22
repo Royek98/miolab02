@@ -12,7 +12,7 @@
     </template>
     <template #tableBody>
       <tr
-        v-for="(item, index) in dataStoreLab03.generatedValues"
+        v-for="(item, index) in dataStoreLab03.generatedValues.data"
         :key="item"
         @mouseenter="(event) => event.originalTarget.classList.add('green')"
         @mouseleave="(event) => event.originalTarget.classList.remove('green')"

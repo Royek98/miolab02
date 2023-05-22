@@ -10,64 +10,76 @@ export const useDataStoreLab05 = defineStore("DataStoreLab05", () => {
   const dataStoreLab04 = useDataStoreLab04();
 
   const generatedValues = computed(() => {
-    let data = [];
+
     let postMutation, postSelection;
+
+    let fxMaxIteration = [];
+    fxMaxIteration.length = 0;
+    let fxMinIteration = [];
+    fxMinIteration.length = 0;
+    let fxAvgIteration = [];
+    fxAvgIteration.length = 0;
+    let lastIteration;
+
+    if (dataStoreLab03.elite != null) {
+      dataStoreLab03.elite = null;
+    }
+
+    // wiem że syf, działa nie ruszać
     for (let i = 0; i < dataStore.T; i++) {
       if (i == 0) {
-        postSelection = dataStoreLab03.generateValues(null);
-        postSelection = postSelection.map((element) => element.ps);
+        postSelection = dataStoreLab03.generateValues(null, null);
+        fxMaxIteration.push(postSelection.iterationTableFxMax);
+        fxMinIteration.push(postSelection.iterationTableFxMin);
+        fxAvgIteration.push(postSelection.iterationTableFxAvg);
+        postSelection = postSelection.data.map((element) => element.ps);
         postMutation = dataStoreLab04.generateValues(postSelection);
-        data.push(postMutation.map((element) => element.fx));
       } 
       else {
-        data.push(postMutation.map((element) => element.fx));
         postMutation = postMutation.map(
           (element) => element.mutationPopulationReal
         );
         postSelection = dataStoreLab03.generateValues(postMutation);
-        postSelection = postSelection.map((element) => element.ps);
+        fxMaxIteration.push(postSelection.iterationTableFxMax);
+        fxMinIteration.push(postSelection.iterationTableFxMin);
+        fxAvgIteration.push(postSelection.iterationTableFxAvg);
+        lastIteration = postSelection.data;
+        postSelection = postSelection.data.map((element) => element.ps);
         postMutation = dataStoreLab04.generateValues(postSelection);
       }
-    }
+    } 
     
-    // znalezienie maksymalnej fx dla iteracji
-    let fxMaxIteration = [];
-    for (let i = 0; i < data.length; i++) {
-        let max = -Infinity;
-        for (let j = 0; j < data[i].length; j++) {
-            if (data[i][j] > max) {
-                max = data[i][j];
-            }
-        }
-        fxMaxIteration.push(max);
+    const counts = countValuesInArray(lastIteration);
+    const finishTable = [];
+
+    let sumOfCount = 0;
+    for (const key in counts) {
+      if (counts.hasOwnProperty(key)) {
+        sumOfCount += counts[key];
+      }
     }
 
-    let fxMinIteration = [];
-    for (let i = 0; i < data.length; i++) {
-        let min = Infinity;
-        for (let j = 0; j < data[i].length; j++) {
-            if (data[i][j] < min) {
-                min = data[i][j];
-            }
-        }
-        fxMinIteration.push(min);
-    }
-
-    let fxAvgIteration = [];
-    for (let i = 0; i < data.length; i++) {
-        let sum = 0;
-        for (let j = 0; j < data[i].length; j++) {
-            sum += data[i][j];
-        }
-        fxAvgIteration.push(sum/data[i].length);
+    for (const key in counts) {
+      if (counts.hasOwnProperty(key)) {
+        const found = getBinAndFxByReal(lastIteration, key)
+        // console.log(`Liczba ${key} pojawiła się ${count} razy.`);
+        finishTable.push({
+          real: key,
+          bin: found.bin,
+          fx: found.fx,
+          proc: ((counts[key] / sumOfCount) * 100).toFixed(2)
+        })
+      }
     }
 
     return {
         fxMaxIteration: fxMaxIteration,
         fxMinIteration: fxMinIteration,
-        fxAvgIteration, fxAvgIteration
+        fxAvgIteration, fxAvgIteration,
+        finishTable: finishTable.sort((a, b) => b.fx - a.fx)
     }
   });
+
 
   const iterationTable = computed(() => {
     let data = [];
@@ -76,6 +88,25 @@ export const useDataStoreLab05 = defineStore("DataStoreLab05", () => {
     }
     return data;
   }); 
+
+  const countValuesInArray = (array) => {
+    let reals = array.map((element) => element.real);
+    // flattenedArray = flattenedArray.map((element) => element.real);
+    const counts = {};
+    for (const value of reals) {
+      if (value in counts) {
+        counts[value] += 1;
+      } else {
+        counts[value] = 1;
+      }
+    }
+    return counts;
+  }
+
+  const getBinAndFxByReal = (array, key) => {
+    const found = array.find(element => element.real === key);
+    return { bin: found.bin, fx: found.fx};
+  }
 
   return { generatedValues, iterationTable };
 });

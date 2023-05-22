@@ -102,7 +102,7 @@ const isValidT = computed(() => {
 watch(
   [() => a.value, () => b.value, () => selected.value, () => N.value, () => pk.value, () => pm.value, () => T.value, () => eliteChecked.value],
   ([av, bv, sv, nv, npk, npm, nT, nEliteChecked]) => {
-    if (isValidA.value && isValidB.value && isValidN.value && isValidPk.value && isValidPm.value) {
+    if (isValidA.value && isValidB.value && isValidN.value && isValidPk.value && isValidPm.value && isValidT.value) {
       generateValues(av, bv, nv, sv);
       dataStore.a = av;
       dataStore.b = bv;

@@ -9,18 +9,21 @@
     </template>
     <template #tableBody>
       <tr
-        v-for="(item, index) in dataStoreLab05.generatedValues"
+        v-for="(item, index) in dataStoreLab05.generatedValues.finishTable"
         :key="item"
         @mouseenter="(event) => event.originalTarget.classList.add('green')"
         @mouseleave="(event) => event.originalTarget.classList.remove('green')"
       >
         <td>{{ index + 1 }}</td>
-        <td>{{ item.xbin }}</td>
+        <td>{{ item.real }}</td>
+        <td> {{ item.bin }} </td>
         <td> {{ item.fx }} </td>
-        <td> {{ item.percentage }} </td>
+        <td> {{ item.proc }} </td>
       </tr>
     </template>
   </table-generator>
+
+  <br/>
 
   <Line id="chart" :data="data" :options="options"></Line>
 
@@ -29,6 +32,7 @@
 <script setup>
 import TableGenerator from "@/components/TableGenerator.vue";
 import { useDataStoreLab05 } from "@/stores/dataStoreLab05";
+import { useDataStoreLab03 } from "@/stores/dataStoreLab03";
 import { Line } from 'vue-chartjs'
 import { computed } from 'vue';
 import {
@@ -52,7 +56,6 @@ ChartJS.register(
 )
 
 const dataStoreLab05 = useDataStoreLab05();
-console.log(dataStoreLab05.generatedValues)
 // watch(dataStoreLab05.iterationTable, () => {
 
 // })
@@ -85,7 +88,7 @@ const data = computed(() => { return {
 
 const options = {
   responsive: true,
-  lineTension: 0.4
+  lineTension: 0.3
 }
 
 </script>
