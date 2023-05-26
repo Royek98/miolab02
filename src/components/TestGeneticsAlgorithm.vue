@@ -84,7 +84,7 @@ const longTest = async () => {
   const T = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80];
 
   console.log("Loading...")
-  testAlgorithm(N, PK, PM.T);
+  testAlgorithm(N, PK, PM, T);
   console.log("Completed");
 };
 
