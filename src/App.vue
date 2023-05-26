@@ -10,10 +10,12 @@
   <br/>
   <RouterView />
   
+  <TestGeneticsAlgorithm></TestGeneticsAlgorithm>
 </template>
 
 <script setup>
 import DataForm from "@/components/DataForm.vue";
+import TestGeneticsAlgorithm from "@/components/TestGeneticsAlgorithm.vue";
 </script>
 
 <style scoped>

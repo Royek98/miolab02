@@ -187,6 +187,11 @@ export const useDataStoreLab04 = defineStore("DataStoreLab04", () => {
   };
 
   const calculateChildrenPopulation = (pc, firstParent, secondParent) => {
+    
+    if (firstParent == null) {
+      return null;
+    }
+
     const [firstParentPart1, firstParentPart2] = [
       firstParent.slice(0, pc),
       firstParent.slice(pc),

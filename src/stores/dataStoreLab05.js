@@ -10,7 +10,10 @@ export const useDataStoreLab05 = defineStore("DataStoreLab05", () => {
   const dataStoreLab04 = useDataStoreLab04();
 
   const generatedValues = computed(() => {
+    return geneticsAlgorithm();
+  });
 
+  const geneticsAlgorithm = () => {
     let postMutation, postSelection;
 
     let fxMaxIteration = [];
@@ -34,8 +37,7 @@ export const useDataStoreLab05 = defineStore("DataStoreLab05", () => {
         fxAvgIteration.push(postSelection.iterationTableFxAvg);
         postSelection = postSelection.data.map((element) => element.ps);
         postMutation = dataStoreLab04.generateValues(postSelection);
-      } 
-      else {
+      } else {
         postMutation = postMutation.map(
           (element) => element.mutationPopulationReal
         );
@@ -47,8 +49,8 @@ export const useDataStoreLab05 = defineStore("DataStoreLab05", () => {
         postSelection = postSelection.data.map((element) => element.ps);
         postMutation = dataStoreLab04.generateValues(postSelection);
       }
-    } 
-    
+    }
+
     const counts = countValuesInArray(lastIteration);
     const finishTable = [];
 
@@ -61,33 +63,32 @@ export const useDataStoreLab05 = defineStore("DataStoreLab05", () => {
 
     for (const key in counts) {
       if (counts.hasOwnProperty(key)) {
-        const found = getBinAndFxByReal(lastIteration, key)
+        const found = getBinAndFxByReal(lastIteration, key);
         // console.log(`Liczba ${key} pojawiła się ${count} razy.`);
         finishTable.push({
           real: key,
           bin: found.bin,
           fx: found.fx,
-          proc: ((counts[key] / sumOfCount) * 100).toFixed(2)
-        })
+          proc: ((counts[key] / sumOfCount) * 100).toFixed(2),
+        });
       }
     }
 
     return {
-        fxMaxIteration: fxMaxIteration,
-        fxMinIteration: fxMinIteration,
-        fxAvgIteration, fxAvgIteration,
-        finishTable: finishTable.sort((a, b) => b.fx - a.fx)
-    }
-  });
-
+      fxMaxIteration: fxMaxIteration,
+      fxMinIteration: fxMinIteration,
+      fxAvgIteration: fxAvgIteration,
+      finishTable: finishTable.sort((a, b) => b.fx - a.fx),
+    };
+  };
 
   const iterationTable = computed(() => {
     let data = [];
     for (let i = 1; i <= dataStore.T; i++) {
-        data.push(i);
+      data.push(i);
     }
     return data;
-  }); 
+  });
 
   const countValuesInArray = (array) => {
     let reals = array.map((element) => element.real);
@@ -101,12 +102,12 @@ export const useDataStoreLab05 = defineStore("DataStoreLab05", () => {
       }
     }
     return counts;
-  }
+  };
 
   const getBinAndFxByReal = (array, key) => {
-    const found = array.find(element => element.real === key);
-    return { bin: found.bin, fx: found.fx};
-  }
+    const found = array.find((element) => element.real === key);
+    return { bin: found.bin, fx: found.fx };
+  };
 
-  return { generatedValues, iterationTable };
+  return { generatedValues, iterationTable, geneticsAlgorithm };
 });

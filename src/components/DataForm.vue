@@ -116,6 +116,16 @@ watch(
   }
 );
 
+watch(
+  [() => dataStore.N, () => dataStore.pk, () => dataStore.pm, () => dataStore.T],
+  ([nv, pkv, pmv, tv]) => {
+    N.value = nv;
+    pk.value = pkv;
+    pm.value = pmv;
+    T.value = tv;
+  }
+);
+
 onMounted(() => {
   generateValues(dataStore.a, dataStore.b, dataStore.N, dataStore.selected);
 });
