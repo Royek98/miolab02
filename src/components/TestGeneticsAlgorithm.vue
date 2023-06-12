@@ -4,7 +4,6 @@
     <button @click="quickTest" class="quick">QUICK TEST</button>
     <button @click="longTest" class="long">LONG TEST</button>
   </div>
-  
 
   <h2>Best Configurations</h2>
   <table-generator>
@@ -28,7 +27,7 @@
         <td>{{ item.configuration.pk }}</td>
         <td>{{ item.configuration.pm }}</td>
         <td>{{ item.configuration.T }}</td>
-        <td>{{ item.fxAvg.toFixed(dataStore.selected) }}</td>
+        <td>{{ item.fxAvg }}</td>
       </tr>
     </template>
   </table-generator>
@@ -57,7 +56,7 @@
         <td>{{ item.configuration.pk }}</td>
         <td>{{ item.configuration.pm }}</td>
         <td>{{ item.configuration.T }}</td>
-        <td>{{ item.fxAvg.toFixed(dataStore.selected) }}</td>
+        <td>{{ item.fxAvg }}</td>
       </tr>
     </template>
   </table-generator>
@@ -76,14 +75,14 @@ let worstConfigurations = ref([]);
 
 const longTest = async () => {
   const N = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
-  const PK = [
+  const PM = [
     0.0001, 0.0005, 0.001, 0.0015, 0.002, 0.0025, 0.003, 0.0035, 0.004, 0.0045,
     0.005, 0.01,
   ];
-  const PM = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9];
+  const PK = [0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9];
   const T = [30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80];
-
-  console.log("Loading...")
+  // const T = [10];
+  console.log("Loading...");
   testAlgorithm(N, PK, PM, T);
   console.log("Completed");
 };
@@ -93,7 +92,8 @@ const quickTest = () => {
   const PK = [0.0001];
   const PM = [0.5, 0.55];
   const T = [30, 35, 40, 45, 50, 55, 60];
-  console.log("Loading...")
+  // const T = [30];
+  console.log("Loading...");
   testAlgorithm(N, PK, PM, T);
   console.log("Completed");
 };
@@ -106,6 +106,7 @@ const testAlgorithm = (N, PK, PM, T) => {
   for (let n = 0; n < N.length; n++) {
     dataStore.N = N[n];
     for (let pk = 0; pk < PK.length; pk++) {
+      console.log(PK[pk]);
       dataStore.pk = PK[pk];
       for (let pm = 0; pm < PM.length; pm++) {
         dataStore.pm = PM[pm];
@@ -164,7 +165,27 @@ const testAlgorithm = (N, PK, PM, T) => {
   worstConfigurations.value = worstConfiguration.sort(
     (a, b) => b.fxAvg - a.fxAvg
   );
+
+  const data = {
+    bestConfiguration: bestConfiguration,
+    worstConfiguration: worstConfiguration
+  }
+  postData("http://localhost:4000/testsT80", data);
 };
+
+async function postData(url = "", data = "") {
+  console.log(data); 
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    credentials: "same-origin", // include, *same-origin, omit
+    headers: {
+      "Content-Type": "application/json",
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
+  });
+}
 
 const sumFx = (geneticsAlgorithmResult) => {
   let sumFxAvg = 0;
@@ -204,7 +225,7 @@ button {
   font-size: 16px;
   cursor: pointer;
   margin-left: 0.5em;
-} 
+}
 
 .quick {
   background-color: #4caf50;
